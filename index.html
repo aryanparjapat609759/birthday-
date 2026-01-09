@@ -49,17 +49,40 @@ button{
   font-size:18px;
   line-height:1.8;
 }
-#candle{
-  width:50px;
-  height:100px;
-  background:orange;
-  border-radius:15px;
+#cakeWrapper{
   position:relative;
-  margin:30px 0;
+  margin-top:30px;
+}
+#cake{
+  width:200px;
+  height:150px;
+  background:#ff7b00;
+  border-radius:0 0 20px 20px;
+  position:relative;
+  margin:0 auto;
+}
+#cakeSlice{
+  width:0;
+  height:150px;
+  background:#ffd700;
+  position:absolute;
+  top:0;
+  left:0;
+  border-radius:0 0 20px 20px;
+}
+#candle{
+  width:15px;
+  height:80px;
+  background:orange;
+  border-radius:10px;
+  position:absolute;
+  top:-80px;
+  left:50%;
+  transform:translateX(-50%);
 }
 #flame{
-  width:20px;
-  height:30px;
+  width:12px;
+  height:20px;
   background: radial-gradient(circle, yellow 0%, orange 70%);
   border-radius:50%;
   position:absolute;
@@ -70,8 +93,8 @@ button{
   filter:blur(1px);
 }
 #smoke{
-  width:10px;
-  height:10px;
+  width:8px;
+  height:8px;
   position:absolute;
   top:-35px;
   left:50%;
@@ -112,9 +135,15 @@ footer{
 <div class="section active" id="s1">
   <h1>Surprise Juma ❤️</h1>
   <button id="btnCake">❤️ PRESS ME ❤️</button>
-  <div id="candle">
-    <div id="flame"></div>
-    <div id="smoke"></div>
+  
+  <div id="cakeWrapper">
+    <div id="cake">
+      <div id="candle">
+        <div id="flame"></div>
+        <div id="smoke"></div>
+      </div>
+    </div>
+    <div id="cakeSlice"></div>
   </div>
   <div id="cakeText">Happy Birthday Juma 🎂</div>
 </div>
@@ -180,6 +209,7 @@ const giftAudio=document.getElementById("giftSong");
 
 const flame=document.getElementById("flame");
 const smoke=document.getElementById("smoke");
+const cakeSlice=document.getElementById("cakeSlice");
 
 // Candle Animation
 function lightCandle(){
@@ -192,6 +222,16 @@ function lightCandle(){
     smoke.style.opacity=0.5;
     gsap.to(smoke,{y:-50, opacity:0, scale:2, duration:2, ease:"power1.out"});
   },300);
+}
+
+// Cake Slice Animation
+function cutCake(){
+  let width=0;
+  const sliceInterval = setInterval(()=>{
+    width+=4;
+    cakeSlice.style.width=width+"px";
+    if(width>=200) clearInterval(sliceInterval); // Cake fully sliced
+  },30);
 }
 
 // Confetti
@@ -219,14 +259,15 @@ let i=0;
 
 // BUTTON EVENTS
 btnCake.addEventListener("click",()=>{
-  // Stop any previous audios
   loveAudio.pause(); loveAudio.currentTime=0;
   giftAudio.pause(); giftAudio.currentTime=0;
 
+  lightCandle();
+  cutCake();
+  bdayAudio.play();
+
   s1.classList.remove("active");
   s2.classList.add("active");
-  lightCandle();
-  bdayAudio.play();
 
   // Wait until birthday song ends then start slideshow & song2
   bdayAudio.onended=()=>{
@@ -269,14 +310,13 @@ btnShowShayari.addEventListener("click",()=>{
 btnFun.addEventListener("click",()=>{
   s4.classList.remove("active");
   s5.classList.add("active");
-  loveAudio.pause(); loveAudio.currentTime=0; // stop slideshow song
+  loveAudio.pause(); loveAudio.currentTime=0; 
 });
 
 // Last Fun Scene
 btnGift.addEventListener("click",()=>{
   finalText.innerHTML="एक सौ पचास रुपे देगा 💰 😜";
   createConfetti();
-  // stop any previous audios
   loveAudio.pause(); loveAudio.currentTime=0;
   bdayAudio.pause(); bdayAudio.currentTime=0;
 
@@ -294,3 +334,5 @@ btnGift.addEventListener("click",()=>{
 </script>
 </body>
 </html>
+
+
